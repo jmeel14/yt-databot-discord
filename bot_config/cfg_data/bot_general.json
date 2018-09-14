@@ -1,7 +1,0 @@
-{
-    "small_description": "A YouTube data-grabbing bot built to easily get you the information of YouTube channels/videos/playlists.",
-    "big_description": "A YouTube data-grabbing bot that brings you information about YouTube channels/videos/playlists, such as content length, ratiings, and popularity.",
-    "feature_description": "The bot comes with the following commands, with their descriptions following:",
-    "feature_videos": "video - Video information, including description, author, length of the video, video age, rating, tags",
-    "feature_channel": "channel - Channel information, including description, latest community post, latest video upload, upload frequency, top uploads"
-}
