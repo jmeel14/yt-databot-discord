@@ -64,9 +64,9 @@ class Bot(discord.Client):
             is_DM = isinstance(msg_obj.channel, discord.abc.PrivateChannel)
             if is_DM:
                 print_str = {
-                    "announce": f"INCOMING MESSAGE | [{msg_obj.author.id}] {msg_obj.author.name} : {msg_obj.content[:280]}"
+                    "announce": "INCOMING MESSAGE | [{0.author.id}] {0.author.name} : {0.content}"
                 }
-                print(print_str["announce"])
+                print(print_str["announce"].format(msg_obj))
             sv_prefix = bot_config.cfg_prefix.check_prefix(msg_obj, is_DM)
             msg_cmd = bot_config.cfg_func.check_command(msg_obj, self.user.id, sv_prefix)
             if msg_cmd:
@@ -97,16 +97,16 @@ class Bot(discord.Client):
                     
                     if not isinstance(msg_obj.channel, discord.abc.GuildChannel):
                         print_str = [
-                            f"ERROR | In [{msg_obj.guild.id}] {msg_obj.guild.name}, by user [{msg_obj.author.id}] {msg_obj.author.name}",
-                            f"{msg_obj.author.name}: {msg_cmd}"
+                            "ERROR | In [{0.guild.id}] {0.guild.name}, by user [{0.author.id}] {0.author.name}",
+                            "{0.author.name}: {1}"
                         ]
                     else:
                         print_str = [
-                            f"ERROR | In DM from [{msg_obj.author.id}] {msg_obj.author.name}",
-                            f"{msg_obj.author.name}: {msg_cmd}"
+                            "ERROR | In DM from [{0.author.id}] {0.author.name}",
+                            "{0.author.name}: {1}"
                         ]
-                    print(print_str[0])
-                    print(print_str[1])
+                    print(print_str[0].format(msg_obj))
+                    print(print_str[1].format(msg_obj, msg_cmd))
                     traceback.print_exc()
 
             if msg_obj.author.id == self.owner_id:
@@ -114,7 +114,7 @@ class Bot(discord.Client):
                     await self.client.logout()
                     await self.http_session.close()
                 elif msg_obj.content == "bot.restart":
-                    os.system('start python bot_main.py')
+                    os.system('./bot_start.sh')
                     await self.client.logout()
 
 DISC_YT_BOT = Bot(
@@ -122,3 +122,4 @@ DISC_YT_BOT = Bot(
     bot_config.cfg_auth.get_data("bot_guild", True, extended_prop="bot_meta"),
     bot_config.cfg_auth.get_data('bot_key', True, extended_prop="bot_meta")
 )
+

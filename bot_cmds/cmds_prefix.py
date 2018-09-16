@@ -6,7 +6,7 @@ from re import search as re_s
 from re import escape as re_e
 
 STR_FILE = str(file_loc(__file__))
-STR_PREF_FILE = STR_FILE + '\\..\\bot_config\\cfg_data\\prefix.json'
+STR_PREF_FILE = STR_FILE + '/../bot_config/cfg_data/prefix.json'
 
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):

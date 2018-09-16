@@ -6,7 +6,7 @@ from os.path import dirname as file_loc
 from ._cfg_json import read_json
 
 STR_FILE = str(file_loc(__file__))
-STR_PREF_FILE = STR_FILE + '\\cfg_data\\prefix.json'
+STR_PREF_FILE = STR_FILE + '/cfg_data/prefix.json'
 
 def check_prefix(msg_obj, is_DM):
     """Reads config file to determine prefix, else faults to hardcoded prefix"""

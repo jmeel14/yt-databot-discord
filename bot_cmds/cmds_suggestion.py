@@ -34,11 +34,11 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                 title = "Incoming suggestion",
                 desc = " ".join(cmd_split[2:]),
                 author = {
-                    "name": f"{msg_obj.author.name} - {msg_obj.author.id}",
+                    "name": "{0.author.name} - {0.author.id}".format(msg_obj),
                     "icon": msg_obj.author.avatar_url
                 },
                 emb_footer = {
-                    "text": f"{msg_obj.guild.name} - {msg_obj.guild.id}",
+                    "text": "{0.guild.name} - {0.guild.id}".format(msg_obj),
                     "icon": msg_obj.guild.icon_url
                 }
             )

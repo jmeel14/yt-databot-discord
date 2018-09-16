@@ -6,9 +6,9 @@ import discord
 async def await_coro(coro):
     try:
         awaited = await coro
-        return f"```py\n{awaited}```"
+        return "```py\n{0}```".format(coro)
     except Exception as AwaitError:
-        return f"```{coro}```\nThe code also faulted with the following:\n```py\n{AwaitError}```"
+        return "```{0}```\nThe code also faulted with the following:\n```py\n{1}```".format(coro, AwaitError)
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     try:

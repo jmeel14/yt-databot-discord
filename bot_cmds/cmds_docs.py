@@ -62,14 +62,14 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                     link_ref = API_URL_DEFAULT + API_REF[cmd_arg]["http_ref"]
                     output_embed = cmd_main.Embed(
                         title = API_REF[cmd_arg]["title"],
-                        description = API_REF[cmd_arg]["desc"] + f"\n[Go to documentation]({link_ref})"
+                        description = API_REF[cmd_arg]["desc"] + "\n[Go to documentation]({0})".format(link_ref)
                     )
                     cmd_output_msg = await msg_obj.channel.send(content = None, embed = output_embed)
                     return { "output_admin": True, "output_msg": cmd_output_msg, "trigger_msg": msg_obj }
             except Exception as DocsException:
                 output_embed = cmd_main.err_embed(
                     "Invalid command error",
-                    f"Could not find a documentation part with that name, maybe take a look yourself?\n[Go to documentation]({API_URL_DEFAULT})",
+                    "Could not find a documentation part with that name, maybe take a look yourself?\n[Go to documentation]({0})".format(API_URL_DEFAULT),
                     "Unknown API Reference"
                 )
                 cmd_output_msg = await msg_obj.channel.send(content = None, embed = output_embed)
