@@ -6,9 +6,9 @@ import discord
 async def await_coro(coro):
     try:
         awaited = await coro
-        return "```py\n{0}```".format(coro)
+        return  { "result": awaited, "err": False }
     except Exception as AwaitError:
-        return "```{0}```\nThe code also faulted with the following:\n```py\n{1}```".format(coro, AwaitError)
+        return { "result": coro, "err": AwaitError }
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     try:
@@ -32,9 +32,15 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         )
 
         output_embed.add_field(
-            name = "output",
-            value = eval_run
+            name = "Output",
+            value = "```{0}```".format(eval_run["result"])
         )
+        if eval_run["err"]:
+            output_embed.add_field(
+                name = "The following error occurred, but did not break evaluation:",
+                value = "```{0}```".format(eval_run["err"]),
+                inline = False
+            )
     except BaseException as EvalError:
         output_embed = cmd_main.Embed(
             title = "Evaluation output",
@@ -43,7 +49,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         )
         output_embed.add_field(
             name = "Error",
-            value = EvalError.args
+            value ="```{0}```".format(str(EvalError))
         )
     out_msg = await msg_obj.channel.send(
         content = None,
