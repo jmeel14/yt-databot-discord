@@ -15,6 +15,7 @@ import traceback
 
 CMD_LIST = bot_cmds.cmd_main.cmd_list
 
+CLIENT_LOGGER = logging.getLogger('discord')
 
 async def generic_err(prefix, discord_client, msg_obj, cmd_name):
     if len(prefix) > 3:
@@ -41,10 +42,14 @@ class Bot(discord.Client):
         self.run(bot_token)
 
     async def on_ready(self):
+        try:
+            await self.user.edit(avatar = open('./avatar.png'))
+            CLIENT_LOGGER.log(20, "Avatar successfully updated to meet latest version on disk.")
+        except:
+            pass
         self.http_session = aiohttp.ClientSession()
-        print(
-            "\nSTART-UP: Bot started with ID {0.id} and name {0.name}".format(self.user)
-        )
+        CLIENT_LOGGER.log(20, "START-UP: Bot started with ID {0.id} and name {0.name}".format(self.user))
+    
     async def on_guild_join(self, gld):
         join_str_array = [
             "JOIN: Bot joined ",
