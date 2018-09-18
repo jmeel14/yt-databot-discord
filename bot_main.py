@@ -43,7 +43,7 @@ class Bot(discord.Client):
 
     async def on_ready(self):
         try:
-            await self.user.edit(avatar = open('./avatar.png'))
+            await self.user.edit(avatar = open('./avatar.png', 'rb'))
             CLIENT_LOGGER.log(20, "Avatar successfully updated to meet latest version on disk.")
         except:
             pass
