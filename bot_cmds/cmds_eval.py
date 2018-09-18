@@ -6,15 +6,7 @@ import discord
 async def await_coro(coro):
     try:
         awaited = await coro
-        try:
-            awaited_twice = await awaited
-            try:
-                awaited_thrice = await awaited_twice
-                return awaited_thrice
-            except:
-                return awaited_twice
-        except:
-            return awaited
+        return awaited
     except:
         return coro
 
