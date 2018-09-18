@@ -1,5 +1,5 @@
 from . import cmd_main
-from re import M as re_m
+import re
 from asyncio import sleep
 import discord
 
@@ -15,7 +15,9 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         eval_client = kwargs["self_client"]
         eval_http = kwargs["self_http"]
         eval_disc = discord
-        eval_str = cmd_main.search("^" + cmd_str.split()[0] + "\s(.*)", cmd_str).groups()[0]
+        eval_re = re.compile("^" + cmd_str.split()[0] + "\s(.*)", flags=re.DOTALL)
+        eval_str = eval_re.search(cmd_str).groups()[0]
+        print(cmd_str)
         
         eval_run = await await_coro(eval(eval_str))
 
@@ -33,14 +35,8 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
 
         output_embed.add_field(
             name = "Output",
-            value = "```{0}```".format(eval_run["result"])
+            value = "```{0}```".format(eval_run)
         )
-        if eval_run["err"]:
-            output_embed.add_field(
-                name = "The following error occurred, but did not break evaluation:",
-                value = "```{0}```".format(eval_run["err"]),
-                inline = False
-            )
     except BaseException as EvalError:
         output_embed = cmd_main.Embed(
             title = "Evaluation output",
@@ -61,11 +57,12 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         "trigger_msg": msg_obj
     }
 
-async def cmd_func2(msg_obj, cmd_str, **kwargs):
+async def cmd_func2(cmd_trigger, cmd_str, msg_obj, **kwargs):
     try:
         exec_client = kwargs["self_client"]
         exec_http = kwargs["self_http"]
-        exec_str = cmd_main.search("^" + cmd_str.split()[0] + "\s(.*)", cmd_str, flags=re_m).groups()[0]
+        exec_re = re.compile("^" + cmd_str.split()[0] + "\s(.*)", re.DOTALL)
+        exec_str = exec_re.search(cmd_str).groups()[0]
         exec_run = await await_coro(exec(exec_str))
 
         output_embed = cmd_main.Embed(

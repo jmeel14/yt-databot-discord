@@ -1,6 +1,6 @@
 from re import search as re_s
 from re import escape as re_esc
-from re import M as re_m
+from re import DOTALL as re_d
 
 def check_trigger(msg_obj, self_id, self_prefix):
     """Checks the message for a trigger, whether it's a mention or self ID."""
@@ -22,9 +22,9 @@ def check_command(msg_obj, self_id, self_prefix):
     check_obj = check_trigger(msg_obj, str(self_id), self_prefix)
 
     if check_obj["check_name_mention"][1]:
-        cmd_string = re_s("^" + check_obj["check_name_mention"][0] + "(.*)", msg_obj.content, flags = re_m).groups()[0]
+        cmd_string = re_s("^" + check_obj["check_name_mention"][0] + "(.*)", msg_obj.content, flags = re_d).groups()[0]
     elif check_obj["check_prefix"][1]:
-        cmd_string = re_s("^" + check_obj["check_prefix"][0] + "(.*)", msg_obj.content, flags = re_m).groups()[0]
+        cmd_string = re_s("^" + check_obj["check_prefix"][0] + "(.*)", msg_obj.content, flags = re_d).groups()[0]
     else:
         cmd_string = False
 

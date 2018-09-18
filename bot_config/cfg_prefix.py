@@ -17,9 +17,9 @@ def check_prefix(msg_obj, is_DM):
         pref_json_l = read_json(STR_PREF_FILE)
 
     try:
-        if pref_json_l[check_srv]:
+        try:
             return re_e(pref_json_l[check_srv])
-        else:
+        except:
             return re_e(pref_json_l["default"])
     except:
         return "\~j14 "
