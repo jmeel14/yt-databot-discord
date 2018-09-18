@@ -6,9 +6,9 @@ import discord
 async def await_coro(coro):
     try:
         awaited = await coro
-        return  { "result": awaited, "err": False }
-    except Exception as AwaitError:
-        return { "result": coro, "err": AwaitError }
+        awaited
+    except:
+        coro
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     try:
