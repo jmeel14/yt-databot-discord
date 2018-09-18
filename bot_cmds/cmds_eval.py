@@ -6,9 +6,9 @@ import discord
 async def await_coro(coro):
     try:
         awaited = await coro
-        awaited
+        return awaited
     except:
-        coro
+        return coro
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     try:
@@ -17,7 +17,6 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         eval_disc = discord
         eval_re = re.compile("^" + cmd_str.split()[0] + "\s(.*)", flags=re.DOTALL)
         eval_str = eval_re.search(cmd_str).groups()[0]
-        print(cmd_str)
         
         eval_run = await await_coro(eval(eval_str))
 
