@@ -8,7 +8,7 @@ from os.path import dirname as file_loc
 from json import loads
 
 STR_FILE = str(file_loc(__file__))
-STR_AUTH_FILE = STR_FILE + '\\..\\bot_config\\cfg_data\\authorization.json'
+STR_AUTH_FILE = STR_FILE + '/../bot_config/cfg_data/authorization.json'
 API_URL = "https://www.googleapis.com/youtube/v3/"
 
 def req_build(api_req, reqs_auth):
@@ -40,7 +40,9 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         if fetch_vid_id:
             req_API = await kwargs["self_http"].get(
                 req_build(
-                    'videos?part=snippet,statistics&id={0}'.format(fetch_vid_id), True)
+                    'videos?part=snippet,statistics&id={0}'.format(fetch_vid_id),
+                    True
+                )
             )
             if req_API.status == 200:
                 targ_result = loads(await req_API.text())["items"][0]
@@ -95,11 +97,24 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                 "output_msg": await msg_obj.channel.send(None, embed = output_embed),
                 "output_admin": False
             }
-
+    else:
+        cmd_split = cmd_str.split(" ")
+        cmd_arg = cmd_split[2]
+        print(cmd_arg)
 
 cmd_video = cmd_main.Command(
     "Video",
     "video videosearch vidsearch vs",
+    {
+        "global": {
+            "output_syntax": "{0} <OPTIONAL tags/fulldesc/restrictions> <video URL>",
+            "output_description": "Retrieves information about a video, in respect to the given argument."
+        },
+        "tags": {
+            "output_syntax": "{0} <video URL>",
+            "output_description": "Retrieves the tags of a specified video URL."
+        }
+    },
     "Retrieves general information of a video",
     cmd_func,
     False

@@ -79,6 +79,12 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
 cmd_docs = cmd_main.Command(
     "Developer Documentation",
     "docs doccos documentation",
+    {
+        "global": {
+            "output_syntax": "{0} <API reference>",
+            "output_description": "Provides a short description of the given API reference, and a link to its documentation page."
+        }
+    },
     "Retrieves the URL for a specific part of the bot, with optional arguments to link to the respective Discord.py Rewrite Documentation segment.",
     cmd_func,
     True

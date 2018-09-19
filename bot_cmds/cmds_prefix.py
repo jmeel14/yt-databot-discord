@@ -64,6 +64,12 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
 cmd_video = cmd_main.Command(
     "Prefix",
     "cp change_prefix changeprefix prefix setprefix set_prefix sp",
+    {
+        "global": {
+            "output_syntax": "{0} <any new prefix>",
+            "output_description": "Changes the guild's bot prefix to a different one."
+        }
+    },
     "Modifies the prefix of the current server",
     cmd_func,
     False

@@ -83,6 +83,7 @@ class Bot(discord.Client):
                     else:
                         resp_msg = await CMD_LIST[cmd_name]['func'](
                             cmd_name, msg_cmd, msg_obj,
+                            msg_guild_prefix = sv_prefix,
                             self_client = self.client,
                             self_http = self.http_session
                         )

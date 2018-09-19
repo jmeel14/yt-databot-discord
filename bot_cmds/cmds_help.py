@@ -35,7 +35,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
             )
             output_embed.add_field(
                 name = "Alternative triggers",
-                value = curr_dict_list[prop]["alias"],
+                value = "`{0}`".format(curr_dict_list[prop]["alias"]),
                 inline = True
             )
             output_embed.add_field(
@@ -45,11 +45,52 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
             )
     else:
         try:
-            cmd_main.cmd_list[cmd_str.split(' ')[1]]
-            print("Command '" + cmd_str.split(' ')[1] + "' found in cmd_list")
-        except:
+            cmd_args = cmd_str.split(" ")
+            
+            if cmd_args[1] in cmd_main.cmd_list:
+                if len(cmd_args) == 3 and cmd_args[2] in cmd_main.cmd_list[cmd_args[1]]["args"]:
+                    output_embed = cmd_main.Embed(
+                        title = "Detailed Command Help",
+                        description = "The following is an explanation of how the command works.",
+                        colour = 0x5588DD
+                    )
+                    output_embed.add_field(
+                        name = "Syntax",
+                        value = "{0}".format(
+                            cmd_main.cmd_list[cmd_args[1]]["args"][cmd_args[2]]["output_syntax"].format(
+                                "{0} {1}".format(cmd_args[1], cmd_args[2])
+                            )
+                        ),
+                        inline = False
+                    )
+                    output_embed.add_field(
+                        name = "Command description",
+                        value = cmd_main.cmd_list[cmd_args[1]]["args"][cmd_args[2]]["output_description"]
+                    )
+                elif cmd_main.cmd_list[cmd_args[1]]["args"]["global"]:
+                    output_embed = cmd_main.Embed(
+                        title = "Detailed Command Help",
+                        description = "The following is an explanation of how the command works.",
+                        colour = 0x5588DD
+                    )
+                    output_embed.add_field(
+                        name = "Syntax",
+                        value = "{0}".format(
+                            cmd_main.cmd_list[cmd_args[1]]["args"]["global"]["output_syntax"].format(
+                                cmd_trigger
+                            )
+                        ),
+                        inline = False
+                    )
+                    output_embed.add_field(
+                        name = "Command description",
+                        value = cmd_main.cmd_list[cmd_args[1]]["args"]["global"]["output_description"]
+                    )
+        
+        except Exception as HelpCommandReferenceError:
             cmd_out_str = "Unfortunately, there was no known command with the name `" + cmd_str.split(' ')[1] + "`.\nSorry about that!"
             output_embed = cmd_main.err_embed("Invalid Help Command", cmd_out_str, "Unknown command reference")
+            print(HelpCommandReferenceError)
     
     if output_embed:
         help_msg = await msg_obj.channel.send(
@@ -67,7 +108,14 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
 cmd_help = cmd_main.Command(
     "Commands Help",
     "help ?",
-    "This command outputs the parameters for all other commands.",
+    {
+        "global":
+        {
+            "output_syntax": "{0} <any bot command>",
+            "output_description": "Gives you more information about any command."
+        }
+    },
+    "This command outputs the parameters for all other commands.\nFor more information, try `help help`",
     cmd_func,
     False
 )

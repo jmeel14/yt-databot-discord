@@ -108,6 +108,7 @@ async def cmd_func2(cmd_trigger, cmd_str, msg_obj, **kwargs):
 cmd_eval = cmd_main.Command(
     "Eval",
     "eval evaluate evaluation evaluator",
+    None,
     "This command outputs developer-level functions, and is admin-only.",
     cmd_func,
     True
@@ -115,6 +116,7 @@ cmd_eval = cmd_main.Command(
 cmd_exec = cmd_main.Command(
     "Exec",
     "exec execute executor execution",
+    None,
     "This command outputs developer-level functions, and is admin-only.",
     cmd_func2,
     True

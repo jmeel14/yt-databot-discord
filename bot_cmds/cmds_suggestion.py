@@ -54,6 +54,12 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
 cmd_exec = cmd_main.Command(
     "Suggest a feature/change",
     "suggest suggestion sugg sgst",
+    {
+        "global": {
+            "output_syntax": "{0} <suggestion priority ('l'/'m'/'h')> <suggestion description>",
+            "output_description": "Sends a suggestion to the bot developer with the given priority level.\nThis feature logs your messages."
+        }
+    },
     "If you have any ideas or changes you'd wish to see in the bot, please use this feature wisely and let the developer know. Thank you!",
     cmd_func,
     False
