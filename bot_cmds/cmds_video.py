@@ -1,5 +1,5 @@
 from . import cmd_main
-
+from .cmds_playlist import grab_playlist_id as get_playlist
 
 from re import search as re_s
 from re import escape as re_e
@@ -97,7 +97,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         output_embed = cmd_main.err_embed(
                             "Video Fetch Failure",
                             "An error occurred attempting to get your requested video. The video may have been deleted, or the video ID is wrong.",
-                            "API Response - Page Not Found"
+                            "API Response - Unexpected"
                         )
                 else:
                     output_embed = cmd_main.err_embed(
@@ -156,6 +156,65 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                             "Invalid video ID error"
                         )
                         print(TagsFetchError)
+            elif cmd_args[1] == "playlist":
+                fetch_playlist_id = get_playlist(cmd_args[2])
+                if fetch_playlist_id:
+                    req_API = await kwargs["self_http"].get(
+                        req_build(
+                            'playlists?part=snippet&id={0}'.format(fetch_playlist_id),
+                            True
+                        )
+                    )
+                    if req_API.status == 200:
+                        try:
+                            large_result = loads(await req_API.text())["items"]
+                            if len(large_result) >= 1:
+                                targ_result = large_result[0]["snippet"]
+                                if len(targ_result["description"]) <= 2:
+                                    changed_desc = "_No description was provided for this playlist._"
+                                elif len(targ_result["description"]) > 560:
+                                    changed_desc = targ_result["descripton"][:560] + "..."
+                                else:
+                                    changed_desc = targ_result["description"]
+                                output_embed = cmd_main.Embed(
+                                    title = targ_result["title"],
+                                    description = changed_desc,
+                                    colour = 0xDD2222
+                                )
+                                output_embed.add_field(
+                                    name = "View Playlist",
+                                    value = "[YouTube](https://youtube.com/playlist?list={0})".format(
+                                        fetch_playlist_id
+                                    )
+                                )
+                                output_embed.set_thumbnail(
+                                    url = targ_result["thumbnails"]["default"]["url"]
+                                )
+                            else:
+                                output_embed = cmd_main.err_embed(
+                                    "Playlist Request Error",
+                                    "There were no results for your playlist request. Please try again later.",
+                                    "API Response - No Results"
+                                )
+                        except Exception as PlaylistResponseError:
+                            output_embed = cmd_main.err_embed(
+                                "Playlist Response Error",
+                                "Unfortunately, the API returned a response that the bot was not ready for.\nPlease let the developer know of this issue using the `suggest` command.",
+                                "API Response - Unexpected"
+                            )
+                            print(PlaylistResponseError)
+                    else:
+                        output_embed = cmd_main.err_embed(
+                            "Playlist Request Error",
+                            "The playlist you requested could not be found. It may have been removed, changed location, or typed by you incorrectly.",
+                            "API Response - Page Not Found"
+                        )
+                else:
+                    output_embed = cmd_main.err_embed(
+                        "Playlist Request Parse Error",
+                        "The playlist URL that you provided could not be used to send a request. Please check to make sure the URL is correct and try again.",
+                        "Malformed playlist URL error"
+                    )
         await init_msg.delete()
         return {
             "output_msg": await msg_obj.channel.send(None, embed = output_embed),
@@ -164,18 +223,22 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
 
 cmd_video = cmd_main.Command(
     "Video",
-    "video videosearch vidsearch vs",
+    "video vid v",
     {
         "global": {
-            "output_syntax": "{0} `<OPTIONAL tags/fulldesc/restrictions>` `<video URL>`",
+            "output_syntax": "{0} `<OPTIONAL tags/fulldesc/playlist/restrictions>` `<video URL>`",
             "output_description": "Retrieves information about a video, in respect to the given argument."
         },
         "tags": {
             "output_syntax": "{0} `<video URL>`",
             "output_description": "Retrieves the tags of a specified video URL."
+        },
+        "playlist": {
+            "output_syntax": "{0} `<video URL containing playlist ID>`",
+            "output_description": "Retrieves information about a video's playlist."
         }
     },
-    "Retrieves general information of a video",
+    "Retrieves general information of a YouTube video.",
     cmd_func,
     False
 )

@@ -51,19 +51,14 @@ class Bot(discord.Client):
         CLIENT_LOGGER.log(20, "START-UP: Bot started with ID {0.id} and name {0.name}".format(self.user))
     
     async def on_guild_join(self, gld):
-        join_str_array = [
-            "JOIN: Bot joined ",
-            "guild with ID {0.id} ", "and name {0.name}, ",
-            "with {0.members}, ", "of which {0.human_members} are human."
-        ]
-        mbr_count = [len(gld.members), len([mbr for mbr in gld.members if mbr.bot])]
-        mbr_humans = [str(mbr_count[0] / (mbr_count[0] - mbr_count[1])) + "%"]
-        format_str = "".join(join_str_array).format({
-            "id": gld.id, "name": gld.name,
-            "members": mbr_count[0], "human_members": mbr_humans[1]
-        })
-        print(format_str)
-    
+        join_str = "JOIN: Bot joined guild with ID {0} and name {1}\nMembers: {2} Humans:{3}"
+        join_str = join_str.format(
+            gld.id, gld.name, len(gld.members),
+            len([mbr for mbr in gld.members if mbr.bot]) / len(gld.members)
+        )
+        print(join_str)
+    async def on_guild_remove(self, gld):
+        print("Left/removed from guild {0}".format(gld.name))
     async def on_message(self, msg_obj):
         if not msg_obj.author.bot or msg_obj.author.id == self.owner_id:
             is_DM = isinstance(msg_obj.channel, discord.abc.PrivateChannel)
@@ -101,9 +96,9 @@ class Bot(discord.Client):
                     if msg_obj.channel.id not in [110373943822540800, 468690756899438603, 110374153562886144]:
                         await generic_err(sv_prefix, self, msg_obj, cmd_name)
                     
-                    if not isinstance(msg_obj.channel, discord.abc.GuildChannel):
+                    if not isinstance(msg_obj.channel, discord.abc.PrivateChannel):
                         print_str = [
-                            "ERROR | In [{0.guild.id}] {0.guild.name}, by user [{0.author.id}] {0.author.name}",
+                            "ERROR | In guild [{0.guild.id}] {0.guild.name}, by user [{0.author.id}] {0.author.name}",
                             "{0.author.name}: {1}"
                         ]
                     else:
