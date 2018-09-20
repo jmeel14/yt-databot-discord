@@ -56,8 +56,20 @@ cmd_exec = cmd_main.Command(
     "suggest suggestion sugg sgst",
     {
         "global": {
-            "output_syntax": "{0} <suggestion priority ('l'/'m'/'h')> <suggestion description>",
+            "output_syntax": "{0} `<suggestion priority ('l'/'m'/'h')>` `<suggestion description>`",
             "output_description": "Sends a suggestion to the bot developer with the given priority level.\nThis feature logs your messages."
+        },
+        "l": {
+            "output_syntax": "{0} `<suggestion description>`",
+            "output_description": "Sends a suggestion of low priority. Use this one if the problem's just a typo, or something mostly irrelevant."
+        },
+        "m": {
+            "output_syntax": "{0} `<suggestion description>`",
+            "output_description": "Sends a suggestion of medium priority. Use this one if the bot's giving wrong information, or a little buggy."
+        },
+        "h": {
+            "output_syntax": "{0} `<suggestion description>`",
+            "output_description": "Sends a suggestion of high priority. Please reserve this only for issues that ruin the purpose of the bot."
         }
     },
     "If you have any ideas or changes you'd wish to see in the bot, please use this feature wisely and let the developer know. Thank you!",

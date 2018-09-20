@@ -77,7 +77,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         name = "Syntax",
                         value = "{0}".format(
                             cmd_main.cmd_list[cmd_args[1]]["args"]["global"]["output_syntax"].format(
-                                cmd_trigger
+                                cmd_args[1]
                             )
                         ),
                         inline = False
@@ -111,7 +111,7 @@ cmd_help = cmd_main.Command(
     {
         "global":
         {
-            "output_syntax": "{0} <any bot command>",
+            "output_syntax": "{0} `<any bot command>`",
             "output_description": "Gives you more information about any command."
         }
     },
