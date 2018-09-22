@@ -46,7 +46,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
             if fetch_playlist_id:
                 req_API = await kwargs["self_http"].get(
                     req_build(
-                        'playlists?part=snippet&id={0}'.format(fetch_playlist_id),
+                        'playlists?part=snippet,contentDetails&id={0}'.format(fetch_playlist_id),
                         True
                     )
                 )
@@ -55,6 +55,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         large_result = loads(await req_API.text())["items"]
                         if len(large_result) >= 1:
                             targ_result = large_result[0]["snippet"]
+                            targ_result_content = large_result[0]["contentDetails"]
                             if len(targ_result["description"]) <= 2:
                                 changed_desc = "_No description was provided for this playlist._"
                             elif len(targ_result["description"]) > 560:
@@ -70,7 +71,12 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                                 name = "View Playlist",
                                 value = "[YouTube](https://youtube.com/playlist?list={0})".format(
                                     fetch_playlist_id
-                                )
+                                ),
+                                inline = True
+                            )
+                            output_embed.add_field(
+                                name = "Playlist length",
+                                value = "{0} video(s)".format(targ_result_content["itemCount"])
                             )
                             output_embed.set_thumbnail(
                                 url = targ_result["thumbnails"]["default"]["url"]
