@@ -7,6 +7,8 @@ from re import escape as re_e
 from os.path import dirname as file_loc
 from json import loads
 
+from datetime import datetime
+
 STR_FILE = str(file_loc(__file__))
 STR_AUTH_FILE = STR_FILE + '/../bot_config/cfg_data/authorization.json'
 API_URL = "https://www.googleapis.com/youtube/v3/"
@@ -85,12 +87,21 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         try:
                             channel_resp = loads(await req_API_channel.text())["items"][0]
                             output_embed.set_footer(
-                                text = targ_result["snippet"]["channelTitle"],
+                                text = "{0} | Published {1}".format(
+                                    targ_result["snippet"]["channelTitle"],
+                                    targ_result["snippet"]["publishedAt"]
+                                ),
                                 icon_url = channel_resp["snippet"]["thumbnails"]["default"]["url"]
                             )
                         except:
                             output_embed.set_footer(
-                                text = targ_result["snippet"]["channelTitle"],
+                                text = "{0} | Published {1}".format(
+                                    targ_result["snippet"]["channelTitle"],
+                                    datetime.strptime(
+                                        targ_result["publishedAt"][:-5],
+                                        '%Y-%m-%dT%H:%M:%S'
+                                    )
+                                ),
                                 icon_url = "https://i.imgur.com/YxrOhoy.pngg"
                             )
                     except:
@@ -141,12 +152,24 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         channel_resp = loads(await req_API_channel.text())["items"][0]
                         try:
                             output_embed.set_footer(
-                                text = targ_result["channelTitle"],
+                                text = "{0} | Published {1}".format(
+                                    targ_result["channelTitle"],
+                                    datetime.strptime(
+                                        targ_result["publishedAt"][:-5],
+                                        '%Y-%m-%dT%H:%M:%S'
+                                    )
+                                ),
                                 icon_url = channel_resp["snippet"]["thumbnails"]["default"]["url"]
                             )
                         except:
                             output_embed.set_footer(
-                                text = targ_result["channelTitle"],
+                                text = "{0} | Published {1}".format(
+                                    targ_result["channelTitle"],
+                                    datetime.strptime(
+                                        targ_result["publishedAt"][:-5],
+                                        '%Y-%m-%dT%H:%M:%S'
+                                    )
+                                ),
                                 icon_url = "https://i.imgur.com/YxrOhoy.png"
                             )
                     except Exception as TagsFetchError:
@@ -196,6 +219,34 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                                 output_embed.set_thumbnail(
                                     url = targ_result["thumbnails"]["default"]["url"]
                                 )
+                                req_API_channel = await kwargs["self_http"].get(
+                                req_build(
+                                        'channels?part=snippet&id={0}'.format(targ_result["channelId"]), True
+                                    )
+                                )
+                                channel_resp = loads(await req_API_channel.text())["items"][0]
+                                try:
+                                    output_embed.set_footer(
+                                        text = "{0} | Published {1}".format(
+                                            targ_result["channelTitle"],
+                                            datetime.strptime(
+                                                targ_result["publishedAt"][:-5],
+                                                '%Y-%m-%dT%H:%M:%S'
+                                            )
+                                        ),
+                                        icon_url = channel_resp["snippet"]["thumbnails"]["default"]["url"]
+                                    )
+                                except:
+                                    output_embed.set_footer(
+                                        text = "{0} | Published {1}".format(
+                                            targ_result["channelTitle"],
+                                            datetime.strptime(
+                                                targ_result["publishedAt"][:-5],
+                                                '%Y-%m-%dT%H:%M:%S'
+                                            )
+                                        ),
+                                        icon_url = "https://i.imgur.com/YxrOhoy.png"
+                                    )
                             else:
                                 output_embed = cmd_main.err_embed(
                                     "Playlist Request Error",
