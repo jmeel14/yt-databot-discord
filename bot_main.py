@@ -51,6 +51,7 @@ class Bot(discord.Client):
                 await self.change_presence(
                     activity = discord.Activity(name = " for @mention help", type = discord.ActivityType.watching)
                 )
+                CLIENT_LOGGER.log(20, "Successfully set activity status to 'Watching for @mention help'.")
             except:
                 pass
         except:

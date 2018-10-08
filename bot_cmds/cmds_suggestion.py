@@ -131,7 +131,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
             )
             suggestion_accept = False
             suggestion_priority = None
-            if owner_args[0] != "c":
+            if owner_args[0] == suggestion_id and owner_args[1] != "c":
                 if (cmd_args[1] in SUGGESTION_LEVELS) and (owner_args[0] == 'y' or owner_args[0] == cmd_args[1]):
                     suggestion_accept = True
                     suggestion_priority = cmd_args[1]
@@ -164,7 +164,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                     footer = "Suggestion unwarranted/rejected by owner"
                 )
             if suggestion_accept:
-                SUGGESTS_DICT[suggestion_id] = {
+                SUGGESTS_DICT["suggestions"][suggestion_id] = {
                     "author_id": msg_obj.author.id,
                     "msg_meta": {
                         "msg_id": msg_obj.id,
