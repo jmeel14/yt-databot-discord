@@ -126,7 +126,11 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
             confirm_msg = await targ_chnl.send(suggestion_id, embed = confirm_embed)
             
             def check_owner_responding(msg):
-                return msg.author.id == kwargs["self_guild_meta"]["self_author"] and msg.channel.id == SUGGESTION_CHANNELS["raw"]
+                return (
+                    msg.content.split(" ")[0] == suggestion_id and
+                    msg.author.id == kwargs["self_guild_meta"]["self_author"] and
+                    msg.channel.id == SUGGESTION_CHANNELS["raw"]
+                )
             
             owner_response = await kwargs["self_client"].wait_for('message', check = check_owner_responding)
             owner_args = owner_response.content.split(" ")
@@ -134,55 +138,59 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
 
             suggestion_accept = False
             suggestion_priority = None
-            if owner_args[0] == suggestion_id and owner_args[1] != "c":
-                if (cmd_args[1] in SUGGESTION_LEVELS) and (owner_args[1] == 'y' or owner_args[1] == cmd_args[1]):
-                    suggestion_accept = True
-                    suggestion_priority = cmd_args[1]
-                    out_str = "Your suggestion was accepted, and is now stored in the bot support guild!"
-                    out_embed = SUGGESTION_LEVELS[cmd_args[1]]["embed"].build_suggestion_embed(
-                        SUGGESTION_LEVELS,
-                        title = "{0} | Received {1}".format(suggestion_id, time_str),
-                        desc = suggestion_str,
-                        author = { "name": msg_obj.author.name, "icon": msg_obj.author.avatar_url },
-                        emb_footer = { "text": "{0} | {1}".format(msg_obj.guild.id, msg_obj.guild.name), "icon": msg_obj.guild.icon_url }
+            if owner_args[0] == suggestion_id:
+                if owner_args[1] != "c":
+                    if (cmd_args[1] in SUGGESTION_LEVELS) and (owner_args[1] == 'y' or owner_args[1] == cmd_args[1]):
+                        suggestion_accept = True
+                        suggestion_priority = cmd_args[1]
+                        out_str = "Your suggestion was accepted, and is now stored in the bot support guild!"
+                        out_embed = SUGGESTION_LEVELS[cmd_args[1]]["embed"].build_suggestion_embed(
+                            SUGGESTION_LEVELS,
+                            title = "{0} | Received {1}".format(suggestion_id, time_str),
+                            desc = suggestion_str,
+                            author = { "name": msg_obj.author.name, "icon": msg_obj.author.avatar_url },
+                            emb_footer = { "text": "{0} | {1}".format(msg_obj.guild.id, msg_obj.guild.name), "icon": msg_obj.guild.icon_url }
+                        )
+                    elif owner_args[1] != cmd_args[1] and cmd_args[1] in SUGGESTION_LEVELS:
+                        suggestion_accept = True
+                        suggestion_priority = owner_args[1]
+                        out_str = "Your suggestion was accepted, but at a different priority."
+                        out_embed = SUGGESTION_LEVELS[owner_args[1]]["embed"].build_sugestion_embed(
+                            SUGGESTION_LEVELS,
+                            title = "{0} | Received {1}".format(suggestion_id, time_str),
+                            desc = suggestion_str,
+                            author = { "name": msg_obj.author.name, "icon": msg_obj.author.avatar_url },
+                            emb_footer = { "text": "{0} | {1}".format(msg_obj.guild.id, msg_obj.guild.name), "icon": msg_obj.guild.icon_url }
+                        )
+                    await kwargs["self_client"].get_channel(SUGGESTION_LEVELS[cmd_args[1]]["channel"]).send(
+                        None, embed = out_embed
                     )
-                elif owner_args[1] != cmd_args[1] and cmd_args[1] in SUGGESTION_LEVELS:
-                    suggestion_accept = True
-                    suggestion_priority = owner_args[1]
-                    out_str = "Your suggestion was accepted, but at a different priority."
-                    out_embed = SUGGESTION_LEVELS[owner_args[1]]["embed"].build_sugestion_embed(
-                        SUGGESTION_LEVELS,
-                        title = "{0} | Received {1}".format(suggestion_id, time_str),
-                        desc = suggestion_str,
-                        author = { "name": msg_obj.author.name, "icon": msg_obj.author.avatar_url },
-                        emb_footer = { "text": "{0} | {1}".format(msg_obj.guild.id, msg_obj.guild.name), "icon": msg_obj.guild.icon_url }
+                else:
+                    re_reason_compile = re.compile("^\d*\s[cC]\s(.*)", re.DOTALL)
+                    owner_reason = re_reason_compile.search(owner_response.content).groups()[0]
+                    out_str = "Your suggestion was rejected... The owner responded with:"
+                    out_embed = cmd_main.err_embed(
+                        title = "Suggestion Receival Failure",
+                        desc = owner_reason,
+                        footer = "Suggestion unwarranted/rejected by owner"
                     )
-            elif owner_args[0] == suggestion_id:
-                re_reason_compile = re.compile("^\d*\s[cC]\s(.*)", re.DOTALL)
-                owner_reason = re_reason_compile.search(owner_response.content).groups()[0]
-                out_str = "Your suggestion was rejected... The owner responded with:"
-                out_embed = cmd_main.err_embed(
-                    title = "Suggestion Receival Failure",
-                    desc = owner_reason,
-                    footer = "Suggestion unwarranted/rejected by owner"
-                )
-            if suggestion_accept:
-                await confirm_msg.delete()
-                SUGGESTS_DICT["suggestions"][suggestion_id] = {
-                    "author_id": msg_obj.author.id,
-                    "msg_meta": {
-                        "msg_id": msg_obj.id,
-                        "msg_channel_id": msg_obj.channel.id,
-                        "msg_guild_id": msg_obj.guild.id
-                    },
-                    "suggestion": {
-                        "sugg_content": suggestion_str,
-                        "sugg_priority": suggestion_priority
+                if suggestion_accept:
+                    await confirm_msg.delete()
+                    SUGGESTS_DICT["suggestions"][suggestion_id] = {
+                        "author_id": msg_obj.author.id,
+                        "msg_meta": {
+                            "msg_id": msg_obj.id,
+                            "msg_channel_id": msg_obj.channel.id,
+                            "msg_guild_id": msg_obj.guild.id
+                        },
+                        "suggestion": {
+                            "sugg_content": suggestion_str,
+                            "sugg_priority": suggestion_priority
+                        }
                     }
-                }
-                suggests_file = open(STR_SUGGESTS_FILE, 'w')
-                suggests_file.write(json_d(SUGGESTS_DICT))
-                suggests_file.close()
+                    suggests_file = open(STR_SUGGESTS_FILE, 'w')
+                    suggests_file.write(json_d(SUGGESTS_DICT))
+                    suggests_file.close()
     except Exception as ParseSuggestionError:
         out_str = None
         out_embed = cmd_main.err_embed(
