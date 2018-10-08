@@ -33,9 +33,10 @@ async def generic_err(prefix, discord_client, msg_obj, cmd_name):
         )
 
 class Bot(discord.Client):
-    def __init__(self, ownerID, guildID, bot_token):
+    def __init__(self, ownerID, guildMeta, bot_token):
         super(Bot, self).__init__()
-        self.owner_guild_id = guildID
+        self.owner_guild_id = guildMeta["self_guild"]
+        self.support_channel_id = guildMeta["self_support"]
         self.owner_id = ownerID
         self.client = self
 
@@ -72,7 +73,7 @@ class Bot(discord.Client):
             if msg_cmd:
                 cmd_name = msg_cmd.split(" ")[0]
                 try:
-                    if CMD_LIST[cmd_name]['admin'] and msg_obj.author.id != 103832588556193792:
+                    if CMD_LIST[cmd_name]['admin'] and msg_obj.author.id != self.owner_id:
                         await generic_err(sv_prefix, self, msg_obj, cmd_name)
                         return
                     else:
@@ -80,7 +81,12 @@ class Bot(discord.Client):
                             cmd_name, msg_cmd, msg_obj,
                             msg_guild_prefix = sv_prefix,
                             self_client = self.client,
-                            self_http = self.http_session
+                            self_http = self.http_session,
+                            self_guild_meta = {
+                                "self_guild": self.get_guild(self.owner_guild_id),
+                                "self_support_chnl": self.get_channel(self.support_channel_id),
+                                "self_author": self.owner_id
+                            }
                         )
                         try:
                             if resp_msg["output_admin"]:
@@ -120,7 +126,7 @@ class Bot(discord.Client):
 
 DISC_YT_BOT = Bot(
     bot_config.cfg_auth.get_data("bot_author", True, extended_prop="bot_meta"),
-    bot_config.cfg_auth.get_data("bot_guild", True, extended_prop="bot_meta"),
+    bot_config.cfg_auth.get_data("bot_guild_meta", True, extended_prop="bot_meta"),
     bot_config.cfg_auth.get_data('bot_key', True, extended_prop="bot_meta")
 )
 

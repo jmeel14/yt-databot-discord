@@ -7,7 +7,9 @@ async def await_coro(coro):
     try:
         awaited = await coro
         return awaited
-    except:
+    except Exception as CoroException:
+        if CoroException.args[0] == "cannot await":
+            print(CoroException)
         return coro
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
