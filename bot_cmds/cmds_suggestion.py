@@ -164,6 +164,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                     footer = "Suggestion unwarranted/rejected by owner"
                 )
             if suggestion_accept:
+                await confirm_msg.delete()
                 SUGGESTS_DICT["suggestions"][suggestion_id] = {
                     "author_id": msg_obj.author.id,
                     "msg_meta": {
