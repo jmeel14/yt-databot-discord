@@ -46,6 +46,13 @@ class Bot(discord.Client):
         try:
             await self.user.edit(avatar = open('./avatar.png', 'rb').read())
             CLIENT_LOGGER.log(20, "Avatar successfully updated to meet latest version on disk.")
+
+            try:
+                await self.change_presence(
+                    activity = discord.Activity(name = " for @mention help", type = discord.ActivityType.watching)
+                )
+            except:
+                pass
         except:
             pass
         self.http_session = aiohttp.ClientSession()
