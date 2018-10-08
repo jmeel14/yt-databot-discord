@@ -157,7 +157,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                         author = { "name": msg_obj.author.name, "icon": msg_obj.author.avatar_url },
                         emb_footer = { "text": "{0} | {1}".format(msg_obj.guild.id, msg_obj.guild.name), "icon": msg_obj.guild.icon_url }
                     )
-            else:
+            elif owner_args[0] == suggestion_id:
                 re_reason_compile = re.compile("^[cC]\s(.*)", re.DOTALL)
                 owner_reason = re_reason_compile.search(owner_response.content).groups()[0]
                 out_str = "Your suggestion was rejected... The owner responded with:"
