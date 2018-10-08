@@ -90,27 +90,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                 "\nRespond with `Y` to accept suggestion with user's suggestion level,",
                 "\nor enter appropriate suggestion level, using `l`, `m`, or `h`.\nRespond with `C <reason>` to cancel."
             ])
-            confirm_embed = cmd_main.Embed(
-                title = "Incoming suggestion",
-                description = confirm_str.format(msg_obj.author),
-                colour = 0xAAF9FF
-            )
-            confirm_embed.add_field(
-                name = "Suggestion content",
-                value = suggestion_str
-            )
-            confirm_embed.add_field(
-                name = "User's Suggestion level",
-                value = cmd_args[1]
-            )
-            confirm_msg = await targ_chnl.send(None, embed = confirm_embed)
-            
-            def check_owner_responding(msg):
-                return msg.author.id == kwargs["self_guild_meta"]["self_author"] and msg.channel.id == SUGGESTION_CHANNELS["raw"]
-            
-            owner_response = await kwargs["self_client"].wait_for('message', check = check_owner_responding)
-            owner_args = owner_response.content.split(" ")
-            owner_args[0] = owner_args[0].lower()
+
             time_now = datetime.now()
             time_str = "{0}:{1}:{2} on {3}/{4}/{5}".format(
                 time_now.hour,
@@ -129,6 +109,29 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                 time_now.second,
                 time_now.microsecond
             )
+
+            confirm_embed = cmd_main.Embed(
+                title = "Incoming suggestion",
+                description = confirm_str.format(msg_obj.author),
+                colour = 0xAAF9FF
+            )
+            confirm_embed.add_field(
+                name = "Suggestion content",
+                value = suggestion_str
+            )
+            confirm_embed.add_field(
+                name = "User's Suggestion level",
+                value = cmd_args[1]
+            )
+            confirm_msg = await targ_chnl.send(suggestion_id, embed = confirm_embed)
+            
+            def check_owner_responding(msg):
+                return msg.author.id == kwargs["self_guild_meta"]["self_author"] and msg.channel.id == SUGGESTION_CHANNELS["raw"]
+            
+            owner_response = await kwargs["self_client"].wait_for('message', check = check_owner_responding)
+            owner_args = owner_response.content.split(" ")
+            owner_args[0] = owner_args[0].lower()
+
             suggestion_accept = False
             suggestion_priority = None
             if owner_args[0] == suggestion_id and owner_args[1] != "c":
