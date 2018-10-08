@@ -4,4 +4,4 @@ bot_config/cfg_data
 bot_cmds/__pycache__
 bot_cmds/cmd_data
 
-./status_messages.json
+status_messages.json
