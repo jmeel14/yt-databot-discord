@@ -130,7 +130,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
             
             owner_response = await kwargs["self_client"].wait_for('message', check = check_owner_responding)
             owner_args = owner_response.content.split(" ")
-            owner_args[0] = owner_args[0].lower()
+            owner_args[1] = owner_args[1].lower()
 
             suggestion_accept = False
             suggestion_priority = None
