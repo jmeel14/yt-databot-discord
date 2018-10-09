@@ -6,7 +6,6 @@ from re import escape as re_e
 
 from os.path import dirname as file_loc
 from json import loads
-
 from datetime import datetime
 
 STR_FILE = str(file_loc(__file__))
@@ -135,13 +134,20 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                     )
                     try:
                         targ_result = loads(await req_API.text())["items"][0]["snippet"]
-                        output_embed = cmd_main.Embed(
-                            title = targ_result["title"],
-                            description = "**The video you requested had the following tags:**\n{0}".format(
-                                "\n".join(targ_result["tags"][:20])
-                            ),
-                            colour = 0xDD2222
-                        )
+                        try:
+                            output_embed = cmd_main.Embed(
+                                title = targ_result["title"],
+                                description = "**The video you requested had the following tags:**\n{0}".format(
+                                    "\n".join(targ_result["tags"][:20])
+                                ),
+                                colour = 0xDD2222
+                            )
+                        except:
+                            output_embed = cmd_main.Embed(
+                                title = targ_result["title"],
+                                description = "Unfortunately, the video that you requested did not have any tags.",
+                                colour = 0xffee00
+                            )
                         output_embed.set_thumbnail(url = targ_result["thumbnails"]["default"]["url"])
 
                         req_API_channel = await kwargs["self_http"].get(

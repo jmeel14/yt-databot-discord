@@ -1,0 +1,55 @@
+{
+ "kind": "youtube#videoListResponse",
+ "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/bzz4astfRE_9k52gwt4ABQDrnlk\"",
+ "pageInfo": {
+  "totalResults": 1,
+  "resultsPerPage": 1
+ },
+ "items": [
+  {
+   "kind": "youtube#video",
+   "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/DeYammzKrJ-8S65PsRvdO5OfBWI\"",
+   "id": "oUE9j8TD6kU",
+   "snippet": {
+    "publishedAt": "2012-08-07T21:23:51.000Z",
+    "channelId": "UCEJQExQBezIo5AcZoZc3ONg",
+    "title": "Sneezing Chicken",
+    "description": "Jukin Media Verified (Original)\n* For licensing / permission to use: Contact - licensing(at)jukinmediadotcom\nThe sneezing chicken is Squeak, a light sussex bantam hen. We keep 5 bantam hens in our yard for eggs and entertainment. We live in suburbia in the city of Brisbane, Australia, and the whole yard is their domain and sometimes the house too. One night we heard this incredible noise from the coop every few minutes. I went out to check on the little darlings, half worried it was a snake or some other critter bothering them but it was just Squeak sneezing away. The others didn't seem too bothered but I brought her inside to monitor and possibly take to the vet the next morning. She spent the night in a box in the spare room and she sneezed through the night. By the morning she as right as rain. Not a sniffle, so out she went and that was the end of the episode. \n\nWhen chickens sneeze it can be a sign of illness, infection or even gapeworm but in this case it was done and dusted in a day so it can't have been anything like that. It was definitely an obstruction of some kind in the windpipe, or whatever it's called on a chicken!",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/oUE9j8TD6kU/default.jpg",
+      "width": 120,
+      "height": 90
+     },
+     "medium": {
+      "url": "https://i.ytimg.com/vi/oUE9j8TD6kU/mqdefault.jpg",
+      "width": 320,
+      "height": 180
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/oUE9j8TD6kU/hqdefault.jpg",
+      "width": 480,
+      "height": 360
+     },
+     "standard": {
+      "url": "https://i.ytimg.com/vi/oUE9j8TD6kU/sddefault.jpg",
+      "width": 640,
+      "height": 480
+     },
+     "maxres": {
+      "url": "https://i.ytimg.com/vi/oUE9j8TD6kU/maxresdefault.jpg",
+      "width": 1280,
+      "height": 720
+     }
+    },
+    "channelTitle": "snowfort",
+    "categoryId": "22",
+    "liveBroadcastContent": "none",
+    "localized": {
+     "title": "Sneezing Chicken",
+     "description": "Jukin Media Verified (Original)\n* For licensing / permission to use: Contact - licensing(at)jukinmediadotcom\nThe sneezing chicken is Squeak, a light sussex bantam hen. We keep 5 bantam hens in our yard for eggs and entertainment. We live in suburbia in the city of Brisbane, Australia, and the whole yard is their domain and sometimes the house too. One night we heard this incredible noise from the coop every few minutes. I went out to check on the little darlings, half worried it was a snake or some other critter bothering them but it was just Squeak sneezing away. The others didn't seem too bothered but I brought her inside to monitor and possibly take to the vet the next morning. She spent the night in a box in the spare room and she sneezed through the night. By the morning she as right as rain. Not a sniffle, so out she went and that was the end of the episode. \n\nWhen chickens sneeze it can be a sign of illness, infection or even gapeworm but in this case it was done and dusted in a day so it can't have been anything like that. It was definitely an obstruction of some kind in the windpipe, or whatever it's called on a chicken!"
+    }
+   }
+  }
+ ]
+}
