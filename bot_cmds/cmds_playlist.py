@@ -1,26 +1,14 @@
 from . import cmd_main
 
+from ._cmd_generate_API_request import req_build
+from ._cmd_channel_footer import generate_channel_footer
 
 from re import search as re_s
 from re import escape as re_e
 
-from os.path import dirname as file_loc
 from json import loads
 
 from datetime import datetime
-
-STR_FILE = str(file_loc(__file__))
-STR_AUTH_FILE = STR_FILE + '/../bot_config/cfg_data/authorization.json'
-API_URL = "https://www.googleapis.com/youtube/v3/"
-
-def req_build(api_req, reqs_auth):
-    token_file = open(STR_AUTH_FILE)
-    token = loads(token_file.read())
-    ret_str = API_URL + api_req
-    if reqs_auth:
-        return  ret_str + "&key=" + token["yt_key"]
-    else:
-        return ret_str
 
 def grab_playlist_id(playlist_link):
     playlist_return_id = None
@@ -83,34 +71,12 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                             output_embed.set_thumbnail(
                                 url = targ_result["thumbnails"]["default"]["url"]
                             )
-                            req_API_channel = await kwargs["self_http"].get(
-                                req_build(
-                                    'channels?part=snippet&id={0}'.format(targ_result["channelId"]), True
-                                )
+                            
+                            output_embed = await generate_channel_footer(
+                                output_embed,
+                                targ_result["channelId"],
+                                published_footer = { "published_at": targ_result["publishedAt"] }
                             )
-                            channel_resp = loads(await req_API_channel.text())["items"][0]
-                            try:
-                                output_embed.set_footer(
-                                    text = "{0} | Published {1}".format(
-                                        targ_result["channelTitle"],
-                                        datetime.strptime(
-                                            targ_result["publishedAt"][:-5],
-                                            '%Y-%m-%dT%H:%M:%S'
-                                        )
-                                    ),
-                                    icon_url = channel_resp["snippet"]["thumbnails"]["default"]["url"]
-                                )
-                            except:
-                                output_embed.set_footer(
-                                    text = "{0} | Published {1}".format(
-                                        targ_result["channelTitle"],
-                                        datetime.strptime(
-                                            targ_result["publishedAt"][:-5],
-                                            '%Y-%m-%dT%H:%M:%S'
-                                        )
-                                    ),
-                                    icon_url = "https://i.imgur.com/YxrOhoy.png"
-                                )
                         else:
                             output_embed = cmd_main.err_embed(
                                 "Playlist Request Error",

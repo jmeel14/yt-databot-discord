@@ -1,4 +1,4 @@
-from . import _cfg_json
+from . import _cmd_json
 from . import cmd_main
 from os.path import dirname as file_loc
 
@@ -28,10 +28,10 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
 
         pref_srv = str(msg_obj.guild.id)
 
-        pref_json = _cfg_json.read_json(STR_PREF_FILE)
+        pref_json = _cmd_json.read_json(STR_PREF_FILE)
         pref_json[pref_srv] = prefix_str
 
-        _cfg_json.write_json(STR_PREF_FILE, pref_json)
+        _cmd_json.write_json(STR_PREF_FILE, pref_json)
 
         out_str = "The bot's prefix in this channel has been successfully set to '" + prefix_str + "'.\n"
         embed_obj = cmd_main.Embed(
@@ -45,7 +45,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         )
 
     else:
-        curr_pref_json = _cfg_json.read_json(STR_PREF_FILE)
+        curr_pref_json = _cmd_json.read_json(STR_PREF_FILE)
         try:
             curr_pref = curr_pref_json[str(msg_obj.guild.id)]
         except:
