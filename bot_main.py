@@ -50,16 +50,15 @@ class Bot(discord.Client):
         try:
             await self.user.edit(avatar = open('./avatar.png', 'rb').read())
             CLIENT_LOGGER.log(20, "Avatar successfully updated to meet latest version on disk.")
-
-            try:
-                await self.change_presence(
-                    activity = discord.Activity(name = " for @mention help", type = discord.ActivityType.watching)
-                )
-                CLIENT_LOGGER.log(20, "Successfully set activity status to 'Watching for @mention help'.")
-            except:
-                pass
         except:
             pass
+        try:
+            await self.change_presence(
+                activity = discord.Activity(name = " for @mention help", type = discord.ActivityType.watching)
+            )
+            CLIENT_LOGGER.log(20, "Successfully set activity status to 'Watching for @mention help'.")
+        except Exception as StatusError:
+            print(StatusError)
         self.http_session = aiohttp.ClientSession()
         CLIENT_LOGGER.log(20, "START-UP: Bot started with ID {0.id} and name {0.name}".format(self.user))
     

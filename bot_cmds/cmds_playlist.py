@@ -31,7 +31,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         )
         init_msg = await msg_obj.channel.send(None, embed = init_embed)
         cmd_args = cmd_str.split(" ")
-        if len(cmd_str.split(" ")) == 2:
+        if len(cmd_args) == 2:
             fetch_playlist_id = grab_playlist_id(cmd_args[1])
             if fetch_playlist_id:
                 req_API = await kwargs["self_http"].get(
@@ -102,6 +102,17 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                     "The playlist URL that you provided could not be used to send a request. Please check to make sure the URL is correct and try again.",
                     "Malformed playlist URL error"
                 )
+        else:
+            """if cmd_args[1] == "videos":
+                req_build(
+                    "playlists?part=snippet,"
+                )  TODO - Make this thing work
+            """
+            output_embed = cmd_main.err_embed(
+                "Feature coming soon",
+                "Arguments for this command are currently not ready, and will be here soon. Please look forward to their arrival!",
+                "Coming soon..."
+            )
     await init_msg.delete()
     return {
         "output_msg": await msg_obj.channel.send(None, embed = output_embed),
