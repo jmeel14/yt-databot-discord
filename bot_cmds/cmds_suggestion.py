@@ -155,7 +155,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                         suggestion_accept = True
                         suggestion_priority = owner_args[1]
                         out_str = "Your suggestion was accepted, but at a different priority."
-                        out_embed = SUGGESTION_LEVELS[owner_args[1]]["embed"].build_sugestion_embed(
+                        out_embed = SUGGESTION_LEVELS[owner_args[1]]["embed"].build_suggestion_embed(
                             SUGGESTION_LEVELS,
                             title = "{0} | Received {1}".format(suggestion_id, time_str),
                             desc = suggestion_str,

@@ -250,6 +250,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         "The playlist URL that you provided could not be used to send a request. Please check to make sure the URL is correct and try again.",
                         "Malformed playlist URL error"
                     )
+
             else:
                 output_embed = cmd_main.err_embed(
                     "Command Parse Error",
@@ -267,7 +268,7 @@ cmd_video = cmd_main.Command(
     "video vid v",
     {
         "global": {
-            "output_syntax": "{0} `<OPTIONAL tags/fulldesc/playlist/restrictions>` `<video URL>`",
+            "output_syntax": "{0} `<OPTIONAL tags/description/playlist/restrictions>` `<video URL>`",
             "output_description": "Retrieves information about a video, in respect to the given argument."
         },
         "tags": {

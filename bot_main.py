@@ -19,9 +19,13 @@ CLIENT_LOGGER = logging.getLogger('discord')
 
 async def generic_err(prefix, discord_client, msg_obj, cmd_name):
     if len(prefix) > 3:
-        err_str = "There was no command found with the name '" + cmd_name + "', or the response was too big!"
+        err_str = "".join([
+            "There was an issue processing your requested command '", cmd_name,"'.",
+            "\n", "This should not have happened, so please let the developer know using ",
+            "`{0} suggest h <description of the problem>`.".format(prefix)
+        ])
         err_embed = discord.Embed(
-            title = "Command error",
+            title = "Invalid Command Error",
             description = err_str,
             colour = 0xDD0000
         )
@@ -81,31 +85,32 @@ class Bot(discord.Client):
             if msg_cmd:
                 cmd_name = msg_cmd.split(" ")[0]
                 try:
-                    if CMD_LIST[cmd_name]['admin'] and msg_obj.author.id != self.owner_id:
-                        await generic_err(sv_prefix, self, msg_obj, cmd_name)
-                        return
-                    else:
-                        resp_msg = await CMD_LIST[cmd_name]['func'](
-                            cmd_name, msg_cmd, msg_obj,
-                            msg_guild_prefix = sv_prefix,
-                            self_client = self.client,
-                            self_http = self.http_session,
-                            self_guild_meta = {
-                                "self_guild": self.get_guild(self.owner_guild_id),
-                                "self_support_chnl": self.get_channel(self.support_channel_id),
-                                "self_author": self.owner_id
-                            }
-                        )
-                        try:
-                            if resp_msg["output_admin"]:
-                                await asyncio.sleep(30)
-                                await resp_msg["output_msg"].delete()
-                                try:
-                                    await resp_msg["trigger_msg"].delete()
-                                except:
-                                    pass
-                        except:
-                            pass
+                    if cmd_name in CMD_LIST:
+                        if CMD_LIST[cmd_name]['admin'] and msg_obj.author.id != self.owner_id:
+                            await generic_err(sv_prefix, self, msg_obj, cmd_name)
+                            return
+                        else:
+                            resp_msg = await CMD_LIST[cmd_name]['func'](
+                                cmd_name, msg_cmd, msg_obj,
+                                msg_guild_prefix = sv_prefix,
+                                self_client = self.client,
+                                self_http = self.http_session,
+                                self_guild_meta = {
+                                    "self_guild": self.get_guild(self.owner_guild_id),
+                                    "self_support_chnl": self.get_channel(self.support_channel_id),
+                                    "self_author": self.owner_id
+                                }
+                            )
+                            try:
+                                if resp_msg["output_admin"]:
+                                    await asyncio.sleep(30)
+                                    await resp_msg["output_msg"].delete()
+                                    try:
+                                        await resp_msg["trigger_msg"].delete()
+                                    except:
+                                        pass
+                            except:
+                                pass
                 except:
                     if msg_obj.channel.id not in [110373943822540800, 468690756899438603, 110374153562886144]:
                         await generic_err(sv_prefix, self, msg_obj, cmd_name)
