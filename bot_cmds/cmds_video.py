@@ -256,11 +256,11 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                     "There was an unexpected argument given to the command. Please check that you're not adding any unnecessary words to the end of your message.",
                     "Unexpected command argument error"
                 )
-        await init_msg.delete()
-        return {
-            "output_msg": await msg_obj.channel.send(None, embed = output_embed),
-            "output_admin": False
-        }
+    await init_msg.delete()
+    return {
+        "output_msg": await msg_obj.channel.send(None, embed = output_embed),
+        "output_admin": False
+    }
 
 cmd_video = cmd_main.Command(
     "Video",
