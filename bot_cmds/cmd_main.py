@@ -24,14 +24,3 @@ class Command:
                 "func": self.self_func,
                 "admin": self.admin
             }
-
-def err_embed(title, desc, footer):
-    embed_obj = Embed(
-        title = title,
-        description = desc,
-        colour = 0xDD0000
-    )
-    embed_obj.set_footer(
-        text = footer
-    )
-    return embed_obj

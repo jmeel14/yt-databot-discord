@@ -1,17 +1,15 @@
-from . import cmd_main
-
-from ._cmd_generate_API_request import req_build
-from ._cmd_channel_footer import generate_channel_footer
-from ._cmd_get_parameter_id import grab_playlist_id
-
 from re import search as re_s
 from re import escape as re_e
-
 from json import loads
-
 from datetime import datetime
-
 import traceback
+
+from . import cmd_main
+
+from .cmd_fragments._generate_API_request import req_build
+from .cmd_fragments._channel_footer import generate_channel_footer
+from .cmd_fragments._get_parameter_id import grab_playlist_id
+from .cmd_fragments._errors import gen_err
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     if len(cmd_str.split(" ")) > 1:
@@ -70,40 +68,28 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                                     published_footer = { "published_at": targ_result["publishedAt"] }
                                 )
                             else:
-                                output_embed = cmd_main.err_embed(
-                                    "Playlist Request Error",
-                                    "There were no results for your playlist request. Please try again later.",
-                                    "API Response - No Results"
-                                )
+                                output_embed = gen_err("playlist", "error", "not_found")
                         except Exception as PlaylistResponseError:
-                            output_embed = cmd_main.err_embed(
-                                "Playlist Response Error",
-                                "Unfortunately, the API returned a response that the bot was not ready for.\nPlease let the developer know of this issue using the `suggest` command.",
-                                "API Response - Unexpected"
-                            )
+                            output_embed = gen_err("playlist", "error", "unexpected")
                             print(PlaylistResponseError)
+                            traceback.print_exc()
                     else:
-                        output_embed = cmd_main.err_embed(
-                            "Playlist Request Error",
-                            "The playlist you requested could not be found. It may have been removed, changed location, or typed by you incorrectly.",
-                            "API Response - Page Not Found"
-                        )
+                        output_embed = gen_err("playlist", "error", "not_found")
                 else:
-                    output_embed = cmd_main.err_embed(
-                        "Playlist Request Parse Error",
-                        "The playlist URL that you provided could not be used to send a request. Please check to make sure the URL is correct and try again.",
-                        "Malformed playlist URL error"
-                    )
+                    output_embed = gen_err("playlist", "error", "bad_request")
             else:
                 """if cmd_args[1] == "videos":
                     req_build(
                         "playlists?part=snippet,"
                     )  TODO - Make this thing work
                 """
-                output_embed = cmd_main.err_embed(
-                    "Feature coming soon",
-                    "Arguments for this command are currently not ready, and will be here soon. Please look forward to their arrival!",
-                    "Coming soon..."
+                output_embed = gen_err(
+                    None, None, None,
+                    custom_err = {
+                        "title": "Feature coming soon",
+                        "desc": "Arguments for this command are currently not ready, and will be here soon. Please look forward to their arrival!",
+                        "footer": "Coming soon..."
+                    }
                 )
         await init_msg.delete()
         return {

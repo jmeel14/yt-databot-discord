@@ -1,5 +1,5 @@
-from ._cmd_generate_API_request import req_build
-from ._cmd_generate_API_request import json_l
+from ._generate_API_request import req_build
+from ._generate_API_request import json_l
 
 from dateutil.parser import isoparse
 async def generate_channel_footer(targ_embed, channel_ID, **kwargs):

@@ -1,10 +1,10 @@
 from . import cmd_main
 
-from ._cmd_generate_API_request import req_build
-from ._cmd_channel_footer import generate_channel_footer
-from ._cmd_get_parameter_id import grab_vid_id, grab_playlist_id
-from ._cmd_time_parse import convert_duration
-
+from .cmd_fragments._generate_API_request import req_build
+from .cmd_fragments._channel_footer import generate_channel_footer
+from .cmd_fragments._get_parameter_id import grab_vid_id, grab_playlist_id
+from .cmd_fragments._time_parse import convert_duration
+from .cmd_fragments._errors import gen_err
 from re import search as re_s
 from re import escape as re_e
 from dateutil.parser import parse
@@ -72,24 +72,13 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                             published_footer = { "published_at": targ_result["snippet"]["publishedAt"] }
                         )
                     except Exception as ResponseParseError:
-                        output_embed = cmd_main.err_embed(
-                            "Video Fetch Failure",
-                            "An error occurred attempting to get your requested video. The video may have been deleted, or the video ID is wrong.",
-                            "API Response - Unexpected"
-                        )
+                        output_embed = gen_err("video", "error", "unexpected")
                         print(ResponseParseError)
+                        traceback.print_exc()
                 else:
-                    output_embed = cmd_main.err_embed(
-                        "Video Fetch Failure",
-                        "Your request could not be accepted. Please try again later.",
-                        "API Response - Page Not Found"
-                    )
+                    output_embed = gen_err("video", "error", "")
             else:
-                output_embed = cmd_main.err_embed(
-                    "Video Fetch Failure",
-                    "The URL that you provided could not be used to send a request. Please check to make sure the URL is correct and try again.",
-                    "Malformed video URL error"
-                )
+                output_embed = gen_err("video", "error", "bad_request")
         elif len(cmd_str.split(" ")) > 2:
             cmd_args = cmd_str.split(" ")
             if cmd_args[1] == "tags":
@@ -126,10 +115,12 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                             published_footer = { "published_at": targ_result["publishedAt"] }
                         )
                     except Exception as TagsFetchError:
-                        output_embed = cmd_main.err_embed(
-                            "Video Tags Error",
-                            "An error occurred attempting to get the tags of your requested video. The video may have been deleted, or the video ID is wrong.",
-                            "Invalid video ID error"
+                        output_embed = gen_err(None, None, None, custom_err = 
+                            {
+                                "title": "Tag Fetch Failure",
+                                "desc": "There was a problem getting the tags of your requested video.\nPlease check to make sure the URL is correct, and try again.",
+                                "footer": "Invalid video ID error"
+                            }
                         )
                         traceback.print_exc()
             elif cmd_args[1] == "description":
@@ -166,18 +157,10 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                                 published_footer = { "published_at": targ_result["publishedAt"] }
                             )
                         except Exception as OutputFormatError:
-                            output_embed = cmd_main.err_embed(
-                                title = "Description Fetch Failure",
-                                desc = "Unfortunately, the API did not provide any description for the given video. Please try again later.",
-                                footer = "API Response - Unexpected"
-                            )
+                            output_embed = gen_err("video", "error", "unexpected")
                             traceback.print_exc()
                     else:
-                        output_embed = cmd_main.err_embed(
-                            title = "Video Description Error",
-                            desc = "Unfortunately, the API did not return any results for your query.\nPlease check your URL or request, and try again.",
-                            footer = "API Response - Page Not Found"
-                        )
+                        output_embed = gen_err("video", "error", "not_found")
             elif cmd_args[1] == "playlist":
                 fetch_playlist_id = grab_playlist_id(cmd_args[2])
                 if fetch_playlist_id:
@@ -225,37 +208,17 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                                     published_footer = { "published_at": targ_result["publishedAt"] }
                                 )
                             else:
-                                output_embed = cmd_main.err_embed(
-                                    "Playlist Request Error",
-                                    "There were no results for your playlist request. Please try again later.",
-                                    "API Response - No Results"
-                                )
+                                output_embed = gen_err("playlist", "error", "not_found")
                         except Exception as PlaylistResponseError:
-                            output_embed = cmd_main.err_embed(
-                                "Playlist Response Error",
-                                "Unfortunately, the API returned a response that the bot was not ready for.\nPlease let the developer know of this issue using the `suggest` command.",
-                                "API Response - Unexpected"
-                            )
+                            output_embed = gen_err("playlist", "error", "unexpected")
                             print(PlaylistResponseError)
+                            traceback.print_exc()
                     else:
-                        output_embed = cmd_main.err_embed(
-                            "Playlist Request Error",
-                            "The playlist you requested could not be found. It may have been removed, changed location, or typed by you incorrectly.",
-                            "API Response - Page Not Found"
-                        )
+                        output_embed = gen_err("playlist", "error", "not_found")
                 else:
-                    output_embed = cmd_main.err_embed(
-                        "Playlist Request Parse Error",
-                        "The playlist URL that you provided could not be used to send a request. Please check to make sure the URL is correct and try again.",
-                        "Malformed playlist URL error"
-                    )
-
+                    output_embed = gen_err("playlist", "error", "bad_request")
             else:
-                output_embed = cmd_main.err_embed(
-                    "Command Parse Error",
-                    "There was an unexpected argument given to the command. Please check that you're not adding any unnecessary words to the end of your message.",
-                    "Unexpected command argument error"
-                )
+                output_embed = gen_err("video", "error", "bad_arg")
     await init_msg.delete()
     return {
         "output_msg": await msg_obj.channel.send(None, embed = output_embed),

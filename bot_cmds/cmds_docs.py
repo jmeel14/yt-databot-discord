@@ -1,7 +1,9 @@
-from . import cmd_main
-
 from re import escape as re_e
 from re import search as re_s
+
+from . import cmd_main
+from .cmd_fragments._errors import gen_err
+
 
 API_URL_DEFAULT = 'https://discordpy.readthedocs.io/en/rewrite/api.html'
 
@@ -67,10 +69,13 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                     cmd_output_msg = await msg_obj.channel.send(content = None, embed = output_embed)
                     return { "output_admin": True, "output_msg": cmd_output_msg, "trigger_msg": msg_obj }
             except Exception as DocsException:
-                output_embed = cmd_main.err_embed(
-                    "Invalid command error",
-                    "Could not find a documentation part with that name, maybe take a look yourself?\n[Go to documentation]({0})".format(API_URL_DEFAULT),
-                    "Unknown API Reference"
+                output_embed = gen_err(
+                    None, None, None,
+                    custom_err = {
+                        "title": "Invalid command error",
+                        "desc": "Could not find a documentation part with that name, maybe take a look yourself?\n[Go to documentation]({0})".format(API_URL_DEFAULT),
+                        "footer": "Unknown API Reference"
+                    }
                 )
                 cmd_output_msg = await msg_obj.channel.send(content = None, embed = output_embed)
                 print(DocsException)

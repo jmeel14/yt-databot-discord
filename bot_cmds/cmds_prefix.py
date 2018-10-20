@@ -1,9 +1,10 @@
-from . import _cmd_json
-from . import cmd_main
 from os.path import dirname as file_loc
-
 from re import search as re_s
 from re import escape as re_e
+
+from . import cmd_main
+from .cmd_fragments import _json
+from .cmd_fragments._errors import gen_err
 
 STR_FILE = str(file_loc(__file__))
 STR_PREF_FILE = STR_FILE + '/../bot_config/cfg_data/prefix.json'
@@ -14,10 +15,13 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         try:
             esc_str = re_s(re_e(cmd_str.split(" ")[0]) + "\s(.*)", cmd_str)
         except:
-            resp_embed = cmd_main.err_embed(
-                "Command Error",
-                "An error occurred attempting to parse the new prefix. Please make sure there are no strange characters in your message.",
-                "Prefix processing error"
+            resp_embed = gen_err(
+                None, None, None,
+                custom_err = {
+                    "title": "Command Error",
+                    "desc": "An error occurred attempting to parse the new prefix. Please make sure there are no strange characters in your message.",
+                    "footer": "Prefix processing error"
+                }
             )
             await msg_obj.channel.send(
                 content = None,
@@ -28,10 +32,10 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
 
         pref_srv = str(msg_obj.guild.id)
 
-        pref_json = _cmd_json.read_json(STR_PREF_FILE)
+        pref_json = _json.read_json(STR_PREF_FILE)
         pref_json[pref_srv] = prefix_str
 
-        _cmd_json.write_json(STR_PREF_FILE, pref_json)
+        _json.write_json(STR_PREF_FILE, pref_json)
 
         out_str = "The bot's prefix in this channel has been successfully set to '" + prefix_str + "'.\n"
         embed_obj = cmd_main.Embed(
@@ -45,7 +49,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         )
 
     else:
-        curr_pref_json = _cmd_json.read_json(STR_PREF_FILE)
+        curr_pref_json = _json.read_json(STR_PREF_FILE)
         try:
             curr_pref = curr_pref_json[str(msg_obj.guild.id)]
         except:

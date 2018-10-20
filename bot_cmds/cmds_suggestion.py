@@ -1,4 +1,5 @@
 from . import cmd_main
+from .cmd_fragments._errors import gen_err
 
 from os.path import dirname as file_loc
 from json import load as json_l
@@ -169,10 +170,13 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                     re_reason_compile = re.compile("^\d*\s[cC]\s(.*)", re.DOTALL)
                     owner_reason = re_reason_compile.search(owner_response.content).groups()[0]
                     out_str = "Your suggestion was rejected... The owner responded with:"
-                    out_embed = cmd_main.err_embed(
-                        title = "Suggestion Receival Failure",
-                        desc = owner_reason,
-                        footer = "Suggestion unwarranted/rejected by owner"
+                    out_embed = gen_err(
+                        None, None, None,
+                        custom_err = {
+                            "title": "Suggestion Rejected",
+                            "desc": "Your suggestion was rejected... The owner gave the following reason:\n{0}".format(owner_reason),
+                            "footer": "Suggestion rejected/unwarranted"
+                        }
                     )
                 if suggestion_accept:
                     await confirm_msg.delete()
@@ -193,11 +197,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                     suggests_file.close()
     except Exception as ParseSuggestionError:
         out_str = None
-        out_embed = cmd_main.err_embed(
-            title = "Suggestion Submit Error",
-            desc = "Could not send that suggestion, as the syntax was incorrect.",
-            footer = "Invalid Suggestion Value"
-        )
+        out_embed = gen_err("suggestion", "error", "bad_request")
         print("BAD SUGGESTION/FORMAT: {0}".format(ParseSuggestionError))
     return { "output_msg": await msg_obj.channel.send(out_str, embed = out_embed), "output_admin": False }
 

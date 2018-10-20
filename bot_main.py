@@ -22,7 +22,7 @@ async def generic_err(prefix, discord_client, msg_obj, cmd_name):
         err_str = "".join([
             "There was an issue processing your requested command '", cmd_name,"'.",
             "\n", "This should not have happened, so please let the developer know using ",
-            "`{0} suggest h <description of the problem>`.".format(prefix)
+            "`@MENTION_BOT suggest h <description of the problem>`."
         ])
         err_embed = discord.Embed(
             title = "Invalid Command Error",

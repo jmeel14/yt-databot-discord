@@ -1,4 +1,8 @@
+import traceback
+
 from . import cmd_main
+from .cmd_fragments._errors import gen_err
+
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     output_embed = False
     self_destruct = False
@@ -89,8 +93,16 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         
         except Exception as HelpCommandReferenceError:
             cmd_out_str = "Unfortunately, there was no known command with the name `" + cmd_str.split(' ')[1] + "`.\nSorry about that!"
-            output_embed = cmd_main.err_embed("Invalid Help Command", cmd_out_str, "Unknown command reference")
+            output_embed = gen_err(
+                None, None, None, 
+                custom_err = {
+                    "title": "Invalid Help Command",
+                    "desc": cmd_out_str,
+                    "footer": "Unknown command reference"
+                }
+            )
             print(HelpCommandReferenceError)
+            traceback.print_exc()
     
     if output_embed:
         help_msg = await msg_obj.channel.send(
