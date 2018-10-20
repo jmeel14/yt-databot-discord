@@ -1,9 +1,8 @@
 from . import cmd_main
-from .cmds_playlist import grab_playlist_id as get_playlist
 
 from ._cmd_generate_API_request import req_build
 from ._cmd_channel_footer import generate_channel_footer
-from ._cmd_get_video_id import grab_vid_id
+from ._cmd_get_parameter_id import grab_vid_id, grab_playlist_id
 from ._cmd_time_parse import convert_duration
 
 from re import search as re_s
@@ -180,7 +179,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                             footer = "API Response - Page Not Found"
                         )
             elif cmd_args[1] == "playlist":
-                fetch_playlist_id = get_playlist(cmd_args[2])
+                fetch_playlist_id = grab_playlist_id(cmd_args[2])
                 if fetch_playlist_id:
                     req_API = await kwargs["self_http"].get(
                         req_build(

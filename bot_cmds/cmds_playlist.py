@@ -2,6 +2,7 @@ from . import cmd_main
 
 from ._cmd_generate_API_request import req_build
 from ._cmd_channel_footer import generate_channel_footer
+from ._cmd_get_parameter_id import grab_playlist_id
 
 from re import search as re_s
 from re import escape as re_e
@@ -11,19 +12,6 @@ from json import loads
 from datetime import datetime
 
 import traceback
-
-def grab_playlist_id(playlist_link):
-    playlist_return_id = None
-    try:
-        if "youtube.com" in playlist_link:
-            playlist_return_id = [re_res for re_res in re_s(
-                re_e("youtube.com/playlist?list=") + "([^&]*)&?|" + re_e("youtube.com/watch?v=") + "[^&]*&?[^&]*?&list\=([^&]*)&?",
-                playlist_link
-            ).groups() if re_res][0]
-            return playlist_return_id
-    except Exception as URLParseError:
-        print(URLParseError)
-        return None
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     if len(cmd_str.split(" ")) > 1:
