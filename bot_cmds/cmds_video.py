@@ -1,3 +1,9 @@
+from re import search as re_s
+from re import escape as re_e
+from dateutil.parser import parse
+from json import loads
+import traceback
+
 from . import cmd_main
 
 from .cmd_fragments._generate_API_request import req_build
@@ -5,13 +11,6 @@ from .cmd_fragments._channel_footer import generate_channel_footer
 from .cmd_fragments._get_parameter_id import grab_vid_id, grab_playlist_id
 from .cmd_fragments._time_parse import convert_duration
 from .cmd_fragments._errors import gen_err
-from re import search as re_s
-from re import escape as re_e
-from dateutil.parser import parse
-
-from json import loads
-
-import traceback
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     init_embed = cmd_main.Embed(
@@ -230,7 +229,7 @@ cmd_video = cmd_main.Command(
     "video vid v",
     {
         "global": {
-            "output_syntax": "{0} `<OPTIONAL tags/description/playlist/restrictions>` `<video URL>`",
+            "output_syntax": "{0} `<OPTIONAL tags/description/playlist>` `<video URL>`",
             "output_description": "Retrieves information about a video, in respect to the given argument."
         },
         "tags": {
