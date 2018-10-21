@@ -221,7 +221,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                 output_embed = gen_err("video", "error", "bad_arg")
     await init_msg.delete()
     return {
-        "output_msg": await msg_obj.channel.send(None, embed = output_embed),
+        "output_msg": await msg_obj.channel.send(kwargs["msg_cmd_compiled"], embed = output_embed),
         "output_admin": False
     }
 

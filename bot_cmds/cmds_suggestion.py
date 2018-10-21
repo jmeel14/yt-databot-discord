@@ -67,11 +67,6 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
             suggestion_str_re = re.compile(re.escape(cmd_args[0]) + "\s.\s(.*)", flags = re.DOTALL)
             suggestion_str = suggestion_str_re.search(cmd_str).groups()[0]
 
-            received_str = "".join([
-                "Your suggestion is received, and has been transferred for the bot developer to see.",
-                "\nPlease wait to see if your suggestion gets accepted in the bot's support guild.",
-                "\n\nYour patience is a very warm gesture, and greatly appreciated."
-            ])
             received_embed = cmd_main.Embed(
                 title = "Suggestion Command Received",
                 description = "Your suggestion has been received, and transferred to the bot developer.",
@@ -85,7 +80,7 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
                 name = "Suggestion priority",
                 value = SUGGESTION_LEVELS[cmd_args[1]]["output_text"]
             )
-            received_msg = await msg_obj.channel.send(None, embed = received_embed)
+            received_msg = await msg_obj.channel.send(kwargs["msg_cmd_compiled"], embed = received_embed)
             confirm_str = "".join([
                 "Suggestion incoming from user \[{0.id}\] {0.name}.",
                 "\nRespond with `Y` to accept suggestion with user's suggestion level,",
@@ -199,7 +194,14 @@ async def cmd_func(cmd_name, cmd_str, msg_obj, **kwargs):
         out_str = None
         out_embed = gen_err("suggestion", "error", "bad_request")
         print("BAD SUGGESTION/FORMAT: {0}".format(ParseSuggestionError))
-    return { "output_msg": await msg_obj.channel.send(out_str, embed = out_embed), "output_admin": False }
+    await received_msg.delete()
+    return {
+        "output_msg": await msg_obj.channel.send("{0}\n{1}".format(
+            kwargs["msg_cmd_compiled"],
+            out_str
+        ), embed = out_embed),
+        "output_admin": False
+    }
 
 cmd_exec = cmd_main.Command(
     "Suggest a feature/change",

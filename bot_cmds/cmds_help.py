@@ -106,7 +106,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     
     if output_embed:
         help_msg = await msg_obj.channel.send(
-            content = None,
+            content = kwargs["msg_cmd_compiled"],
             embed = output_embed
         )
         

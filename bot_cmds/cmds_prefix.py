@@ -61,7 +61,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
             colour = 0x00DDDD
         )
         await msg_obj.channel.send(
-            content = None,
+            content = kwargs["msg_cmd_compiled"],
             embed = embed_obj
         )
 
