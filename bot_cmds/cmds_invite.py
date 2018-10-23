@@ -54,7 +54,7 @@ cmd_invite = cmd_main.Command(
     "invite inv i",
     {
         "global": {
-            "output_syntax": "{0} <OPTIONAL guild>",
+            "output_syntax": "{0} `<OPTIONAL guild>`",
             "output_description": "Gives you either the invite URL for the bot, or\nthe invite URL to the bot's guild, depending on the request."
         },
         "guild": {
