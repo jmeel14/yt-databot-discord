@@ -114,6 +114,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                             published_footer = { "published_at": targ_result["publishedAt"] }
                         )
                     except Exception as TagsFetchError:
+                        print(fetch_vid_id)
                         output_embed = gen_err(None, None, None, custom_err = 
                             {
                                 "title": "Tag Fetch Failure",
