@@ -3,6 +3,8 @@ bot_config/cfg_data
 
 bot_cmds/__pycache__
 bot_cmds/cmd_fragments/__pycache__
-bot_cmds/cmd_data
-!bot_cmds/cmd_data/cmd_errors.json
+
+bot_cmds/cmd_data/cmd_invite.json
+bot_cmds/cmd_data/cmd_suggests.json
+
 status_messages.json

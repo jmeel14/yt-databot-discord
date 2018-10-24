@@ -1,0 +1,57 @@
+{
+    "video": {
+        "error": {
+            "unexpected": {
+                "title": "Video Fetch Failure",
+                "desc": "An error occurred attempting to get your requested video. This video may have been deleted or you might have provided an invalid ID.",
+                "footer": "API Response - Unexpected error"
+            },
+            "not_found": {
+                "title": "Video Fetch Failure",
+                "desc": "The video you were trying to get could not be reached.\nIt may have been moved, or deleted.",
+                "footer": "API Response - Page request error"
+            },
+            "bad_request": {
+                "title": "Video Fetch Failure",
+                "desc": "The URL that you have provided could not be used to send a request.\nPlease make sure the URL is corrent, and try again.",
+                "footer": "Malformed video URL error"
+            },
+            "bad_arg": {
+                "title": "Video Command Failure",
+                "desc": "An error occurred attempting to process your command.\nPlease avoid using excessive arguments, and if you think this should have worked,\nplease let the developer know using `@MENTION_BOT suggest h <a description of your situation>",
+                "footer": "Unexpected command argument error"
+            }
+        },
+        "warning": {}
+    },
+    "playlist": {
+        "error": {
+            "unexpected": {
+                "title": "Playlist Fetch Failure",
+                "desc": "An error occurred attempting to get your requested playlist.\nThis playlist may have been deleted or you might have provided an invalid ID.",
+                "footer": "API Response - Unexpected error"
+            },
+            "not_found": {
+                "title": "Playlist Fetch Failure",
+                "desc": "The playlist you were trying to get could not be reached.\nIt may have been moved, or deleted.",
+                "footer": "API Response - Page request error"
+            },
+            "bad_request": {
+                "title": "Playlist Fetch Failure",
+                "desc": "The URL that you have provided could not be used to send a request.\nPlease make sure the URL is corrent, and try again.",
+                "footer": "Malformed playlist URL error"
+            }
+        },
+        "warning": {}
+    },
+    "suggestion": {
+        "error": {
+            "bad_request": {
+                "title": "Suggestion Submit Error",
+                "desc": "Could not send that suggestion, as the syntax was incorrect.",
+                "footer": "Invalid Suggestion Value"
+            }
+        },
+        "warning": {}
+    }
+}
