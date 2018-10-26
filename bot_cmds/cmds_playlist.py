@@ -8,7 +8,7 @@ from . import cmd_main
 
 from .cmd_fragments._generate_API_request import req_build
 from .cmd_fragments._channel_footer import generate_channel_footer
-from .cmd_fragments._get_parameter_id import grab_playlist_id
+from .cmd_fragments._get_parameter_id import url_parse
 from .cmd_fragments._errors import gen_err
 
 async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
@@ -21,7 +21,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         async with msg_obj.channel.typing():
             cmd_args = cmd_str.split(" ")
             if len(cmd_args) == 2:
-                fetch_playlist_id = grab_playlist_id(cmd_args[1])
+                fetch_playlist_id = url_parse(cmd_args[1])
                 if fetch_playlist_id:
                     req_API = await kwargs["self_http"].get(
                         req_build(

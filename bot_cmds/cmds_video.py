@@ -8,7 +8,7 @@ from . import cmd_main
 
 from .cmd_fragments._generate_API_request import req_build
 from .cmd_fragments._channel_footer import generate_channel_footer
-from .cmd_fragments._get_parameter_id import grab_vid_id, grab_playlist_id
+from .cmd_fragments._get_parameter_id import url_parse
 from .cmd_fragments._time_parse import convert_duration
 from .cmd_fragments._errors import gen_err
 
@@ -21,7 +21,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
     async with msg_obj.channel.typing():
         if len(cmd_str.split(" ")) == 2:
             cmd_split = cmd_str.split(" ")
-            fetch_vid_id = grab_vid_id(cmd_split[1])
+            fetch_vid_id = url_parse(cmd_split[1])
             if fetch_vid_id:
                 req_API = await kwargs["self_http"].get(
                     req_build(
@@ -81,7 +81,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
         elif len(cmd_str.split(" ")) > 2:
             cmd_args = cmd_str.split(" ")
             if cmd_args[1] == "tags":
-                fetch_vid_id = grab_vid_id(cmd_args[2])
+                fetch_vid_id = url_parse(cmd_args[2])
                 if fetch_vid_id:
                     req_API = await kwargs["self_http"].get(
                         req_build(
@@ -124,7 +124,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                         )
                         traceback.print_exc()
             elif cmd_args[1] == "description":
-                fetch_vid_id = grab_vid_id(cmd_args[2])
+                fetch_vid_id = url_parse(cmd_args[2])
                 if fetch_vid_id:
                     req_API = await kwargs["self_http"].get(
                         req_build(
@@ -162,7 +162,7 @@ async def cmd_func(cmd_trigger, cmd_str, msg_obj, **kwargs):
                     else:
                         output_embed = gen_err("video", "error", "not_found")
             elif cmd_args[1] == "playlist":
-                fetch_playlist_id = grab_playlist_id(cmd_args[2])
+                fetch_playlist_id = url_parse(cmd_args[2])
                 if fetch_playlist_id:
                     req_API = await kwargs["self_http"].get(
                         req_build(
